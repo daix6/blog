@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    
+    <title>How to get nth fibonacci number in JavaScript? | Shawn&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="In mathematics, the Fibonacci numbers are the numbers in the following integer sequence, called the Fibonacci sequence: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, … By definition, the first two numbers in the F">
+<meta name="keywords" content="算法,递归,性能优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to get nth fibonacci number in JavaScript?">
+<meta property="og:url" content="http://shawndai.cn/blog/posts/how-to-get-nth-fibonacci-number-in-javascript/index.html">
+<meta property="og:site_name" content="Shawn&#39;s Blog">
+<meta property="og:description" content="In mathematics, the Fibonacci numbers are the numbers in the following integer sequence, called the Fibonacci sequence: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, … By definition, the first two numbers in the F">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://shawndai.cn/blog/gallery/fibonacci.png">
+<meta property="og:updated_time" content="2017-09-14T03:49:37.928Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="How to get nth fibonacci number in JavaScript?">
+<meta name="twitter:description" content="In mathematics, the Fibonacci numbers are the numbers in the following integer sequence, called the Fibonacci sequence: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, … By definition, the first two numbers in the F">
+<meta name="twitter:image" content="http://shawndai.cn/blog/gallery/fibonacci.png">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Shawn&#39;s Blog" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="/blog/css/images/logo.png" />
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-63581862-5', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Shawn&#39;s Blog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/blog/.">Home</a>
+                
+                    <a class="main-nav-link" href="/blog/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/blog/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/blog/tags">Tags</a>
+                
+                    <a class="main-nav-link" href="/blog/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/blog/css/images/avatar.jpg" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/blog/',
+        CONTENT_URL: '/blog/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/blog/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/blog/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/blog/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/blog/tags">Tags</a></td>
+                
+                    <td><a class="main-nav-link" href="/blog/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/blog/css/images/avatar.jpg" />
+            <h2 id="name">Shawn Dai</h2>
+            <h3 id="title">Web Developer, work in Tencent Cloud now.</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shenzhen, China</span>
+            <a id="follow" target="_blank" href="https://github.com/daix6/">FOLLOW</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                15
+                <span>posts</span>
+            </div>
+            <div class="article-info-block">
+                22
+                <span>tags</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/daix6" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://weibo.com/1996DX" target="_blank" title="weibo" class=tooltip>
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://twitter.com/shawndai06" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://instagram.com/shawndai06" target="_blank" title="instagram" class=tooltip>
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="http://steamcommunity.com/profiles/76561198260578251/" target="_blank" title="steam" class=tooltip>
+                            <i class="fa fa-steam"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/blog/atom.xml" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-2016-07-19" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            How to get nth fibonacci number in JavaScript?
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/posts/how-to-get-nth-fibonacci-number-in-javascript/">
+            <time datetime="2016-07-18T16:00:00.000Z" itemprop="datePublished">2016-07-19</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/blog/categories/自问/">自问</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/性能优化/">性能优化</a>, <a class="tag-link" href="/blog/tags/算法/">算法</a>, <a class="tag-link" href="/blog/tags/递归/">递归</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>In mathematics, the Fibonacci numbers are the numbers in the following integer sequence, called the Fibonacci sequence:</p>
+<p>0, 1, 1, 2, 3, 5, 8, 13, 21, 34, …</p>
+<p>By definition, the first two numbers in the Fibonacci sequence are either 1 and 1, or 0 and 1, depending on the chosen starting point of the sequence, and each subsequent number is the sum of the previous two.</p>
+<a id="more"></a>
+<h2 id="A-simple-version"><a href="#A-simple-version" class="headerlink" title="A simple version"></a>A simple version</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">fibonacci</span>(<span class="params">n</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (n &lt; <span class="number">0</span>) <span class="keyword">throw</span> <span class="built_in">Error</span>(<span class="string">'Wrong arguments! Natural numbers only!'</span>)</div><div class="line">  <span class="keyword">return</span> n &lt; <span class="number">2</span> ? n : fibonacci(n - <span class="number">1</span>) + fibonacci(n - <span class="number">2</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line">fibonacci(<span class="number">50</span>)</div></pre></td></tr></table></figure>
+<p>The simplest version takes many unnecessary caculations during the process. There are many redundancy in the <code>fibonacci(n-1)</code> and <code>fibonacci(n-2)</code>.</p>
+<p>This kind of recursion is called <strong>tree recursion</strong>. How about doing the recursion linearly?</p>
+<h2 id="Linear-Recursion"><a href="#Linear-Recursion" class="headerlink" title="Linear Recursion"></a>Linear Recursion</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">fibonacci</span>(<span class="params">n</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (n &lt; <span class="number">0</span>) <span class="keyword">throw</span> <span class="built_in">Error</span>(<span class="string">'Wrong arguments! Natural numbers only!'</span>)</div><div class="line">  <span class="keyword">else</span> &#123;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">iter</span>(<span class="params">cur, next, count</span>) </span>&#123;</div><div class="line">      <span class="keyword">if</span> (count === <span class="number">0</span>) <span class="keyword">return</span> cur</div><div class="line">      <span class="keyword">return</span> iter(next, cur + next, count--)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> iter(<span class="number">0</span>, <span class="number">1</span>, n)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>By this way, the recursion becames linear with <strong>O(n)</strong> time complexity. It’s much faster than the tree recursion version. The reason behind it is that it always cache the latest two result which the <em>tree recursion</em> does not.</p>
+<p>How about we create a Map that cache the result of n once we caculate it?</p>
+<h2 id="Memoization"><a href="#Memoization" class="headerlink" title="Memoization"></a>Memoization</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> fibonacci = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">let</span> memo = &#123;&#125;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params">n</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (n &lt; <span class="number">0</span>) <span class="keyword">throw</span> <span class="built_in">Error</span>(<span class="string">'Wrong arguments! Natural numbers only!'</span>)</div><div class="line">    <span class="keyword">else</span> &#123;</div><div class="line">      <span class="keyword">if</span> (n <span class="keyword">in</span> memo) <span class="keyword">return</span> memo[n]</div><div class="line">      <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">let</span> cache;</div><div class="line">        <span class="keyword">if</span> (n &lt; <span class="number">2</span>) cache = n</div><div class="line">        <span class="keyword">else</span> cache = f(n - <span class="number">1</span>) + f(n - <span class="number">2</span>)</div><div class="line">        memo[n] = cache</div><div class="line">        <span class="keyword">return</span> memo[n]</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;)()</div></pre></td></tr></table></figure>
+<p>In this implementation, it caches every caculated fibonacci(n) in <code>memo</code>, which provides better performance than the simplest version. But it takes more spaces than the linear recursion because of the <code>memo</code>.</p>
+<p>All of the above implementation will throw <code>RangeError: Maximum call stack size exceeded</code> when n is quite big. So why don’t we try to make use of iteration?</p>
+<h2 id="Iteration"><a href="#Iteration" class="headerlink" title="Iteration"></a>Iteration</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">fibonacci</span> (<span class="params">n</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (n &lt; <span class="number">0</span>) <span class="keyword">throw</span> <span class="built_in">Error</span>(<span class="string">'Wrong arguments! Natural numbers only!'</span>)</div><div class="line">  <span class="keyword">let</span> cur = <span class="number">0</span>, next = <span class="number">1</span></div><div class="line"></div><div class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; n; i++)</div><div class="line">    [cur, next] = [next, cur + next]</div><div class="line"></div><div class="line">  <span class="keyword">return</span> cur</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>By this way, there won’t be <code>RangeError</code> any more!</p>
+<h2 id="Benchmark"><a href="#Benchmark" class="headerlink" title="Benchmark"></a>Benchmark</h2><p>There is my different implementations: <a href="https://github.com/daix6/AskDaily/tree/master/examples/fibonacci.js" target="_blank" rel="external">fibonacci.js</a>.</p>
+<p>The picture below shows the performance of different implementations.<br><img src="/blog/gallery/fibonacci.png" alt="Benchmark"></p>
+<h2 id="Have-Fun"><a href="#Have-Fun" class="headerlink" title="Have Fun"></a>Have Fun</h2><p>ES6 introduced generators. Try fibonacci with generator: :laughing:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span>* <span class="title">fibonacci</span> (<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">let</span> a = <span class="number">0</span></div><div class="line">  <span class="keyword">let</span> b = <span class="number">1</span></div><div class="line">  <span class="keyword">yield</span> a</div><div class="line">  <span class="keyword">yield</span> b</div><div class="line">  <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</div><div class="line">    [a, b] = [b, a + b]</div><div class="line">    <span class="keyword">yield</span> b</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">let</span> gen = fibonacci() <span class="comment">// Infinite fibonacci number generator!</span></div><div class="line">gen.next().value <span class="comment">// Use this to get next fibonacci number</span></div></pre></td></tr></table></figure>
+<h2 id="Formula-Lookup-Array…"><a href="#Formula-Lookup-Array…" class="headerlink" title="Formula, Lookup Array…"></a>Formula, Lookup Array…</h2><p>You can read the 3rd reference for more! :yum:</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ol>
+<li><a href="https://en.wikipedia.org/wiki/Fibonacci_number" target="_blank" rel="external">Fibonacci number - Wikipedia</a></li>
+<li><a href="http://taobaofed.org/blog/2016/07/14/performance-optimization-memoization/" target="_blank" rel="external">性能优化：memoization</a></li>
+<li><a href="https://medium.com/javascript-scene/7-surprising-things-i-learned-writing-a-fibonacci-generator-4886a5c87710#.ryupgw428" target="_blank" rel="external">7 Surprising Things I Learned Writing a Fibonacci Generator in JavaScript</a></li>
+</ol>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://shawndai.cn/blog/posts/how-to-get-nth-fibonacci-number-in-javascript/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="http://shawndai.cn/blog/posts/how-to-get-nth-fibonacci-number-in-javascript/">Comments</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/posts/list-of-cache-related-http-header-fields/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    List of Cache-Related HTTP Header Fields?
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/posts/whats-the-difference-between-let-const-and-var/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">What&#39;s the difference between let, const and var?</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">recent</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/posts/read-weekly-issue-1/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/读技术周刊/">读技术周刊</a></p>
+                            <p class="item-title"><a href="/blog/posts/read-weekly-issue-1/" class="title">读技术周刊（一）</a></p>
+                            <p class="item-date"><time datetime="2017-08-11T05:01:40.000Z" itemprop="datePublished">2017-08-11</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/posts/how-to-detect-whether-a-singly-linked-list-contains-loop-or-not/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/posts/how-to-detect-whether-a-singly-linked-list-contains-loop-or-not/" class="title">如何判断一个单向链表是否有环？</a></p>
+                            <p class="item-date"><time datetime="2016-10-15T16:00:00.000Z" itemprop="datePublished">2016-10-16</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/posts/how-to-program-object-oriented-with-javascript/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/posts/how-to-program-object-oriented-with-javascript/" class="title">JavaScript 如何面向对象编程？</a></p>
+                            <p class="item-date"><time datetime="2016-08-25T16:00:00.000Z" itemprop="datePublished">2016-08-26</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/posts/whats-cors-and-how-to-make-cors/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/posts/whats-cors-and-how-to-make-cors/" class="title">何为跨域？如何跨域？</a></p>
+                            <p class="item-date"><time datetime="2016-07-31T16:00:00.000Z" itemprop="datePublished">2016-08-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/posts/whats-the-differences-between-amd-cmd-commonjs/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/posts/whats-the-differences-between-amd-cmd-commonjs/" class="title">What&#39;s the differences between AMD, CMD, CommonJS?</a></p>
+                            <p class="item-date"><time datetime="2016-07-24T16:00:00.000Z" itemprop="datePublished">2016-07-25</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/自问/">自问</a><span class="category-list-count">14</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/读技术周刊/">读技术周刊</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/blog/tags/ES6/" style="font-size: 13.33px;">ES6</a> <a href="/blog/tags/browser/" style="font-size: 10px;">browser</a> <a href="/blog/tags/cache/" style="font-size: 10px;">cache</a> <a href="/blog/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/blog/tags/css/" style="font-size: 10px;">css</a> <a href="/blog/tags/develop-tools/" style="font-size: 10px;">develop tools</a> <a href="/blog/tags/html/" style="font-size: 10px;">html</a> <a href="/blog/tags/http/" style="font-size: 16.67px;">http</a> <a href="/blog/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/blog/tags/jsonp/" style="font-size: 10px;">jsonp</a> <a href="/blog/tags/linux/" style="font-size: 10px;">linux</a> <a href="/blog/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/blog/tags/web/" style="font-size: 10px;">web</a> <a href="/blog/tags/web-font/" style="font-size: 10px;">web font</a> <a href="/blog/tags/性能优化/" style="font-size: 13.33px;">性能优化</a> <a href="/blog/tags/排版/" style="font-size: 10px;">排版</a> <a href="/blog/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/blog/tags/模块/" style="font-size: 10px;">模块</a> <a href="/blog/tags/算法/" style="font-size: 13.33px;">算法</a> <a href="/blog/tags/编译原理/" style="font-size: 10px;">编译原理</a> <a href="/blog/tags/跨域/" style="font-size: 10px;">跨域</a> <a href="/blog/tags/递归/" style="font-size: 10px;">递归</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">links</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://dengal3.github.io/">ailin</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 Shawn Dai<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script>
+    var disqus_config = function () {
+        
+            this.page.url = 'http://shawndai.cn/blog/posts/how-to-get-nth-fibonacci-number-in-javascript/';
+        
+        this.page.identifier = '2016-07-19';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'blog-01noafglys' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

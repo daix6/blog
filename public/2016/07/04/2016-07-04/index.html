@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    
+    <title>What&#39;s the date time string format in JavaScript? | Shawn&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Date time string can be used as the argument of Date.parse method or the Date constructor in JavaScript. According to the specification of Date Time String Format:  ECMAScript defines a string interch">
+<meta name="keywords" content="javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="What&#39;s the date time string format in JavaScript?">
+<meta property="og:url" content="http://shawndai.cn/2016/07/04/2016-07-04/index.html">
+<meta property="og:site_name" content="Shawn&#39;s Blog">
+<meta property="og:description" content="Date time string can be used as the argument of Date.parse method or the Date constructor in JavaScript. According to the specification of Date Time String Format:  ECMAScript defines a string interch">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2017-09-13T13:23:59.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="What&#39;s the date time string format in JavaScript?">
+<meta name="twitter:description" content="Date time string can be used as the argument of Date.parse method or the Date constructor in JavaScript. According to the specification of Date Time String Format:  ECMAScript defines a string interch">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Shawn&#39;s Blog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-63581862-5', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Shawn&#39;s Blog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/blog/.">Home</a>
+                
+                    <a class="main-nav-link" href="/blog/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/blog/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/blog/tags">Tags</a>
+                
+                    <a class="main-nav-link" href="/blog/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/blog/css/images/avatar.jpg" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/blog/',
+        CONTENT_URL: '/blog/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/blog/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/blog/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/blog/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/blog/tags">Tags</a></td>
+                
+                    <td><a class="main-nav-link" href="/blog/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/blog/css/images/avatar.jpg" />
+            <h2 id="name">Shawn Dai</h2>
+            <h3 id="title">Web Developer, work in Tencent Cloud now.</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shenzhen, China</span>
+            <a id="follow" target="_blank" href="https://github.com/daix6/">FOLLOW</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                14
+                <span>posts</span>
+            </div>
+            <div class="article-info-block">
+                19
+                <span>tags</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/daix6" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://weibo.com/1996DX" target="_blank" title="weibo" class=tooltip>
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://twitter.com/shawndai06" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://instagram.com/shawndai06" target="_blank" title="instagram" class=tooltip>
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="http://steamcommunity.com/profiles/76561198260578251/" target="_blank" title="steam" class=tooltip>
+                            <i class="fa fa-steam"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/blog/atom.xml" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-2016-07-04" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            What&#39;s the date time string format in JavaScript?
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/2016/07/04/2016-07-04/">
+            <time datetime="2016-07-03T16:00:00.000Z" itemprop="datePublished">2016-07-04</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/blog/categories/自问/">自问</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/javascript/">javascript</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>Date time string can be used as the argument of <code>Date.parse</code> method or the <code>Date</code> constructor in JavaScript.</p>
+<p>According to the specification of <a href="http://www.ecma-international.org/ecma-262/6.0/index.html#sec-date-time-string-format" target="_blank" rel="external">Date Time String Format</a>:</p>
+<blockquote>
+<p>ECMAScript defines a string interchange format for date-times based upon a simplification of the ISO 8601 Extended Format. The format is as follows: <strong>YYYY-MM-DDTHH:mm:ss.sssZ</strong>.</p>
+</blockquote>
+<a id="more"></a>
+<p>The table of all fields’ meanings:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">YYYY</th>
+<th style="text-align:center">MM</th>
+<th style="text-align:center">DD</th>
+<th style="text-align:center">HH</th>
+<th style="text-align:center">mm</th>
+<th style="text-align:center">ss</th>
+<th style="text-align:center">sss</th>
+<th style="text-align:center">Z</th>
+<th style="text-align:center">- T : .</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Year</td>
+<td style="text-align:center">Month</td>
+<td style="text-align:center">Day</td>
+<td style="text-align:center">Hour</td>
+<td style="text-align:center">Minute</td>
+<td style="text-align:center">Second</td>
+<td style="text-align:center">Millisecond</td>
+<td style="text-align:center">TimeZoneOffset</td>
+<td style="text-align:center">Literally</td>
+</tr>
+<tr>
+<td style="text-align:center">0000-9999</td>
+<td style="text-align:center">01-12</td>
+<td style="text-align:center">01-31</td>
+<td style="text-align:center">00-24</td>
+<td style="text-align:center">00-59</td>
+<td style="text-align:center">00-59</td>
+<td style="text-align:center">000-999</td>
+<td style="text-align:center">Z / ±HH:mm</td>
+<td style="text-align:center">-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> If the time is in UTC, just use “Z” directly for <strong>Z</strong>. “Z” is the zone designator for the zero UTC offset. Offset from UTC are write in the format “±HH:mm”. For example, China’s <strong>Z</strong> should be <em>+08:00</em>.</p>
+<p>There is a <a href="https://upload.wikimedia.org/wikipedia/commons/e/e8/Standard_World_Time_Zones.png" target="_blank" rel="external">picture</a> contains all UTC time zone offsets. 本当に面白い！</p>
+<h2 id="GMT"><a href="#GMT" class="headerlink" title="GMT"></a>GMT</h2><p><a href="https://en.wikipedia.org/wiki/Greenwich_Mean_Time" target="_blank" rel="external">GMT</a> means the <em>Greenwich Mean Time</em>, formerly used as the international civil time standard, which is superseded in that function by <em>Coordinated Universal Time</em>, because of earth’s uneven speed in its elliptical orbit and its axial tilt.</p>
+<h2 id="UT"><a href="#UT" class="headerlink" title="UT"></a>UT</h2><p>UT, <em>Universal Time</em>, is a time standard based on Earth’s rotation. It’s a modern continuation of GMT. There are several versions of it, like UTC, UT1… All UT except for UTC are based on Earth’s rotation relative to distant celestial objects, but with a scaling factor and other adjustments to make them closer to solar time. UTC is based on <a href="https://en.wikipedia.org/wiki/International_Atomic_Time" target="_blank" rel="external">International Atomic Time</a>, with leap seconds added to keep it within 0.9 second of UT1.</p>
+<h3 id="UTC"><a href="#UTC" class="headerlink" title="UTC"></a>UTC</h3><p><a href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time" target="_blank" rel="external">UTC</a>, <em>Coordinated Universal Time</em>, is the primary time standard by which the world regulates clock and time. It is closely related to GMT. For most purposes, UTC is considered interchangeable with GMT, but GMT is no longer precisely defined by the scientific community.</p>
+<h2 id="ISO-8601"><a href="#ISO-8601" class="headerlink" title="ISO 8601"></a>ISO 8601</h2><p><a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="external">ISO 8601</a> is an international standard covering <em>the exchange</em> of date and time-related data, issued by ISO. The purpose of this is to provide an unambiguous and well-defined method of representing dates and times.</p>
+<p>(It shocked me that the standard should charge…=&gt;<a href="http://www.iso.org/iso/home/standards/iso8601.htm" target="_blank" rel="external">link</a>)</p>
+<h2 id="Date-String-in-Action"><a href="#Date-String-in-Action" class="headerlink" title="Date String in Action"></a>Date String in Action</h2><p>There are the results of all <code>Date</code>‘s <em>toString</em> methods in <strong>JavaScript</strong>: (I’m in China now.)</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Method</th>
+<th style="text-align:left">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">toString</td>
+<td style="text-align:left">Mon Jul 04 2016 22:54:38 GMT+0800 (中国标准时间)</td>
+</tr>
+<tr>
+<td style="text-align:left">toJSON</td>
+<td style="text-align:left">2016-07-04T14:54:38.766Z</td>
+</tr>
+<tr>
+<td style="text-align:left">toDateString</td>
+<td style="text-align:left">Mon Jul 04 2016</td>
+</tr>
+<tr>
+<td style="text-align:left">toTimeString</td>
+<td style="text-align:left">22:54:38 GMT+0800 (中国标准时间)</td>
+</tr>
+<tr>
+<td style="text-align:left">toGMTString</td>
+<td style="text-align:left">Mon, 04 Jul 2016 14:54:38 GMT</td>
+</tr>
+<tr>
+<td style="text-align:left">toUTCString</td>
+<td style="text-align:left">Mon, 04 Jul 2016 14:54:38 GMT</td>
+</tr>
+<tr>
+<td style="text-align:left">toISOString</td>
+<td style="text-align:left">2016-07-04T14:54:38.766Z</td>
+</tr>
+<tr>
+<td style="text-align:left">toLocaleString</td>
+<td style="text-align:left">2016/7/4 下午10:54:38</td>
+</tr>
+<tr>
+<td style="text-align:left">toLocaleDateString</td>
+<td style="text-align:left">2016/7/4</td>
+</tr>
+<tr>
+<td style="text-align:left">toLocaleTimeString</td>
+<td style="text-align:left">下午10:54:38</td>
+</tr>
+</tbody>
+</table>
+<p>Now I know that GMT and UTC are time standards while ISO 8601 provides the representation form of time.</p>
+<h2 id="A-Library"><a href="#A-Library" class="headerlink" title="A Library"></a>A Library</h2><p><a href="http://momentjs.com/" target="_blank" rel="external">Moment.js</a>, a library that parses, validates, manipulates, and displays dates in JavaScript. This website is using this library now.</p>
+<p>Example:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">moment(<span class="string">'20160704'</span>, <span class="string">'YYYYMMDD'</span>).format(<span class="string">'MMMM D, YYYY'</span>);</div><div class="line"><span class="comment">// July 4, 2016, exactly the title of this website.</span></div></pre></td></tr></table></figure>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://shawndai.cn/2016/07/04/2016-07-04/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="http://shawndai.cn/2016/07/04/2016-07-04/">Comments</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/2016/07/05/2016-07-05/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    What&#39;s Backus-Naur Form (BNF)?
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/2016/06/27/2016-06-27/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">What does error like EPERM, ENOENT means in Node.js?</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">recent</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/2016/10/16/2016-10-16/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/2016/10/16/2016-10-16/" class="title">如何判断一个单向链表是否有环？</a></p>
+                            <p class="item-date"><time datetime="2016-10-15T16:00:00.000Z" itemprop="datePublished">2016-10-16</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/2016/08/26/2016-08-26/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/2016/08/26/2016-08-26/" class="title">JavaScript 如何面向对象编程？</a></p>
+                            <p class="item-date"><time datetime="2016-08-25T16:00:00.000Z" itemprop="datePublished">2016-08-26</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/2016/08/01/2016-08-01/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/2016/08/01/2016-08-01/" class="title">何为跨域？如何跨域？</a></p>
+                            <p class="item-date"><time datetime="2016-07-31T16:00:00.000Z" itemprop="datePublished">2016-08-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/2016/07/25/2016-07-25/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/2016/07/25/2016-07-25/" class="title">What&#39;s the differences between AMD, CMD, CommonJS?</a></p>
+                            <p class="item-date"><time datetime="2016-07-24T16:00:00.000Z" itemprop="datePublished">2016-07-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/2016/07/24/2016-07-24/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/2016/07/24/2016-07-24/" class="title">What&#39;s word-break and word-wrap?</a></p>
+                            <p class="item-date"><time datetime="2016-07-23T16:00:00.000Z" itemprop="datePublished">2016-07-24</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/自问/">自问</a><span class="category-list-count">14</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/blog/tags/ES6/" style="font-size: 13.33px;">ES6</a> <a href="/blog/tags/browser/" style="font-size: 10px;">browser</a> <a href="/blog/tags/cache/" style="font-size: 10px;">cache</a> <a href="/blog/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/blog/tags/css/" style="font-size: 10px;">css</a> <a href="/blog/tags/html/" style="font-size: 10px;">html</a> <a href="/blog/tags/http/" style="font-size: 16.67px;">http</a> <a href="/blog/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/blog/tags/jsonp/" style="font-size: 10px;">jsonp</a> <a href="/blog/tags/linux/" style="font-size: 10px;">linux</a> <a href="/blog/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/blog/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/blog/tags/排版/" style="font-size: 10px;">排版</a> <a href="/blog/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/blog/tags/模块/" style="font-size: 10px;">模块</a> <a href="/blog/tags/算法/" style="font-size: 13.33px;">算法</a> <a href="/blog/tags/编译原理/" style="font-size: 10px;">编译原理</a> <a href="/blog/tags/跨域/" style="font-size: 10px;">跨域</a> <a href="/blog/tags/递归/" style="font-size: 10px;">递归</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">links</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://dengal3.github.io/">ailin</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 Shawn Dai<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script>
+    var disqus_config = function () {
+        
+            this.page.url = 'http://shawndai.cn/2016/07/04/2016-07-04/';
+        
+        this.page.identifier = '2016-07-04';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'blog-01noafglys' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

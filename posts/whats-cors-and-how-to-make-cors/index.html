@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    
+    <title>何为跨域？如何跨域？ | Shawn&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="（任性决定以后英文一个月中文一个月交替！:smile:） 何为跨域Web 站点众多，人心难测。当在访问未知站点时，我们无法确定其是否可信。如果该站点试图读取（譬如通过 ajax）我们在非同源站点如 gmail.com 的私人信息，这不仅侵犯了我们的隐私，同时也可能会损害我们的利益。为了避免此类安全问题的发生，用户代理（如浏览器）通常会遵循同源策略。">
+<meta name="keywords" content="javascript,跨域,jsonp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="何为跨域？如何跨域？">
+<meta property="og:url" content="http://shawndai.cn/blog/posts/whats-cors-and-how-to-make-cors/index.html">
+<meta property="og:site_name" content="Shawn&#39;s Blog">
+<meta property="og:description" content="（任性决定以后英文一个月中文一个月交替！:smile:） 何为跨域Web 站点众多，人心难测。当在访问未知站点时，我们无法确定其是否可信。如果该站点试图读取（譬如通过 ajax）我们在非同源站点如 gmail.com 的私人信息，这不仅侵犯了我们的隐私，同时也可能会损害我们的利益。为了避免此类安全问题的发生，用户代理（如浏览器）通常会遵循同源策略。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://shawndai.cn/blog/gallery/cross-domain-image.png">
+<meta property="og:image" content="http://shawndai.cn/blog/gallery/cross-domain-ajax.png">
+<meta property="og:image" content="http://shawndai.cn/blog/gallery/cross-domain-ajax-network.png">
+<meta property="og:image" content="http://shawndai.cn/blog/gallery/cross-domain-jsonp.png">
+<meta property="og:image" content="http://shawndai.cn/blog/gallery/cors-simple.png">
+<meta property="og:image" content="http://shawndai.cn/blog/gallery/cors-credentials.png">
+<meta property="og:image" content="http://shawndai.cn/blog/gallery/cors-preflight.png">
+<meta property="og:image" content="http://shawndai.cn/blog/gallery/cors-preflight-1.png">
+<meta property="og:image" content="http://shawndai.cn/blog/gallery/cors-preflight-2.png">
+<meta property="og:updated_time" content="2017-09-14T03:56:41.907Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="何为跨域？如何跨域？">
+<meta name="twitter:description" content="（任性决定以后英文一个月中文一个月交替！:smile:） 何为跨域Web 站点众多，人心难测。当在访问未知站点时，我们无法确定其是否可信。如果该站点试图读取（譬如通过 ajax）我们在非同源站点如 gmail.com 的私人信息，这不仅侵犯了我们的隐私，同时也可能会损害我们的利益。为了避免此类安全问题的发生，用户代理（如浏览器）通常会遵循同源策略。">
+<meta name="twitter:image" content="http://shawndai.cn/blog/gallery/cross-domain-image.png">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Shawn&#39;s Blog" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="/blog/css/images/logo.png" />
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-63581862-5', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Shawn&#39;s Blog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/blog/.">Home</a>
+                
+                    <a class="main-nav-link" href="/blog/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/blog/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/blog/tags">Tags</a>
+                
+                    <a class="main-nav-link" href="/blog/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/blog/css/images/avatar.jpg" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/blog/',
+        CONTENT_URL: '/blog/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/blog/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/blog/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/blog/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/blog/tags">Tags</a></td>
+                
+                    <td><a class="main-nav-link" href="/blog/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/blog/css/images/avatar.jpg" />
+            <h2 id="name">Shawn Dai</h2>
+            <h3 id="title">Web Developer, work in Tencent Cloud now.</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shenzhen, China</span>
+            <a id="follow" target="_blank" href="https://github.com/daix6/">FOLLOW</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                15
+                <span>posts</span>
+            </div>
+            <div class="article-info-block">
+                22
+                <span>tags</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/daix6" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://weibo.com/1996DX" target="_blank" title="weibo" class=tooltip>
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://twitter.com/shawndai06" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://instagram.com/shawndai06" target="_blank" title="instagram" class=tooltip>
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="http://steamcommunity.com/profiles/76561198260578251/" target="_blank" title="steam" class=tooltip>
+                            <i class="fa fa-steam"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/blog/atom.xml" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-2016-08-01" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            何为跨域？如何跨域？
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/posts/whats-cors-and-how-to-make-cors/">
+            <time datetime="2016-07-31T16:00:00.000Z" itemprop="datePublished">2016-08-01</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/blog/categories/自问/">自问</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/javascript/">javascript</a>, <a class="tag-link" href="/blog/tags/jsonp/">jsonp</a>, <a class="tag-link" href="/blog/tags/跨域/">跨域</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>（任性决定以后英文一个月中文一个月交替！:smile:）</p>
+<h2 id="何为跨域"><a href="#何为跨域" class="headerlink" title="何为跨域"></a>何为跨域</h2><p>Web 站点众多，人心难测。当在访问未知站点时，我们无法确定其是否可信。如果该站点试图读取（譬如通过 ajax）我们在非同源站点如 gmail.com 的私人信息，这不仅侵犯了我们的隐私，同时也可能会损害我们的利益。为了避免此类安全问题的发生，用户代理（如浏览器）通常会遵循<strong>同源策略</strong>。</p>
+<a id="more"></a>
+<h3 id="源"><a href="#源" class="headerlink" title="源"></a>源</h3><p>根据 <a href="https://tools.ietf.org/html/rfc6454#section-4" target="_blank" rel="external">RFC6454</a> 的定义，<strong>源（Origin）</strong>由协议（protocol）、主机（host）、端口（port）组成。对于两个 URL，当且仅当三者皆完全匹配时才被视为同源。</p>
+<p>对于 <code>http://www.example.com/a/b.html</code>，同源检测结果如下表：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">URL</th>
+<th style="text-align:center">同源</th>
+<th style="text-align:center">理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><a href="http://www.example.com/a/c.html" target="_blank" rel="external">http://www.example.com/a/c.html</a></td>
+<td style="text-align:center">同</td>
+<td style="text-align:center">-</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="http://www.example.com/b.html" target="_blank" rel="external">http://www.example.com/b.html</a></td>
+<td style="text-align:center">同</td>
+<td style="text-align:center">-</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://www.example.com/a/c.html" target="_blank" rel="external">https://www.example.com/a/c.html</a></td>
+<td style="text-align:center">不同</td>
+<td style="text-align:center">协议</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="http://example.com/a/c.html" target="_blank" rel="external">http://example.com/a/c.html</a></td>
+<td style="text-align:center">不同</td>
+<td style="text-align:center">主机</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="http://www.example.com:3000/a/c.html" target="_blank" rel="external">http://www.example.com:3000/a/c.html</a></td>
+<td style="text-align:center">不同</td>
+<td style="text-align:center">端口</td>
+</tr>
+</tbody>
+</table>
+<h3 id="同源策略"><a href="#同源策略" class="headerlink" title="同源策略"></a>同源策略</h3><p>对于涉及网络的 API，<strong>同源策略（Same-Origin Policy）</strong>分别处理发送与接受的请求。通常来说，一个源被允许发送信息至另一个源，但不被允许从另一个源接收信息。它阻止了恶意站点从其他站点读取机密信息，也阻止了网络内容合法地读取其他站点提供的信息。</p>
+<p>根据 StackOverflow 上的这个<a href="http://stackoverflow.com/questions/9222822/why-do-browser-apis-restrict-cross-domain-requests" target="_blank" rel="external">答案</a>，同源策略通常遵循以下规则：</p>
+<ul>
+<li>规则#1：不允许从不同源读取任何资源</li>
+<li>规则#2：允许写任意信息至不同源，但规则#1不允许读取响应 </li>
+<li>规则#3：允许自由发送跨域的 GET 与 POST 请求，但无法控制 HTTP 头</li>
+</ul>
+<p>对于不同标签、不同 API 同源策略的规则可能会有些许不同。</p>
+<p>例如，我之前的一篇<a href="/blog/posts/differences-between-cookie-session-and-web-storage/">答案</a>中引用了维基百科的图片，虽然其能正确的显示，但我无法读取该图像的信息（除了 DOM 元素的属性）：</p>
+<p><img src="/blog/gallery/cross-domain-image.png" alt="Cross Domain Image"></p>
+<p>内嵌非同源脚本时，浏览器虽然<strong>能正确加载</strong>，但在脚本内发生的具体错误是无法显示的，只有同源脚本的错误才能被捕获。如果我试图使用 ajax 请求非同源的脚本文件时，同样地，我们无法获得该脚本的内容。以 Google Analytics 的脚本为例，ajax 无法读取响应：</p>
+<p><img src="/blog/gallery/cross-domain-ajax.png" alt="Cross Domain AJAX"></p>
+<p>在 Network 能看见发出的 ajax 请求。浏览器确实下载了文件，但由于同源策略，会阻止我们读取脚本内容：</p>
+<p><img src="/blog/gallery/cross-domain-ajax-network.png" alt="Cross Domain AJAX Network"></p>
+<h3 id="为何跨域"><a href="#为何跨域" class="headerlink" title="为何跨域"></a>为何跨域</h3><p>由于同源策略限制过于严格，但为了实现某些特定功能（或者出于性能考虑），我们需要实现合理的跨域请求。</p>
+<h2 id="如何跨域"><a href="#如何跨域" class="headerlink" title="如何跨域"></a>如何跨域</h2><p>聪明的开发者想出了很多方法<del>（找到了很多漏洞）</del>来解决这个问题。</p>
+<h3 id="document-domain-iframe"><a href="#document-domain-iframe" class="headerlink" title="document.domain + iframe"></a>document.domain + iframe</h3><p>在同源策略中，存在例外情况，就是脚本（JavaScript）可以通过 <code>document.domain</code> 方法来改变本身的源。不过，只能设置为当前域的一个后缀（suffix）。例如，对于页面 <a href="http://baz.foo.com" target="_blank" rel="external">http://baz.foo.com</a> 来说，其 <code>document.domain</code> 只能设置为 <strong>foo.com</strong>。如果设置为其他的域，则会报错。在更改域之后，<strong>新的域则会作为后续同源检测的依据</strong>。注意，对 <code>document.domain</code> 的赋值会导致域的端口号被 <code>null</code> 覆盖，所以如果存在端口号，必须得加上。</p>
+<p>利用这一特点，我们可以结合 document.domain 与 <code>&lt;iframe&gt;</code> 实现跨域。由于同源策略，当前页上非同源的 iframe 窗口里的内容我们是无法操作，但如果我们当前页与 iframe 窗口的域都改为相同（合法）域，则当前页与 iframe 页就能相互通信了。这样也就实现了跨域！</p>
+<p>一个栗子：</p>
+<p>假设父域为 <code>http://foo.com</code>，子域为 <code>http://baz.foo.com</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> iframe = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>)</div><div class="line"></div><div class="line"><span class="comment">// 父域 -&gt; 子域</span></div><div class="line">iframe.src = <span class="string">'http://baz.foo.com/iframe'</span></div><div class="line"><span class="comment">// 子域 -&gt; 父域</span></div><div class="line">iframe.src = <span class="string">'http://foo.com/iframe'</span></div><div class="line"></div><div class="line"><span class="comment">// 发起请求方</span></div><div class="line">iframe.style.display = <span class="string">'none'</span></div><div class="line"><span class="built_in">document</span>.body.appendChild(iframe)</div><div class="line"></div><div class="line">iframe.onload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="built_in">document</span>.domain = <span class="string">'foo.com'</span> <span class="comment">// 设置为父域</span></div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">handle</span> (<span class="params">data</span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(data)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">get</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="comment">// 在 iframe 里创建 XHR。如果该 iframe 是非同源的窗口，下面会报错</span></div><div class="line">    <span class="keyword">let</span> xhr = <span class="keyword">new</span> iframe.contentWindow.XMLHttpRequest()</div><div class="line">    xhr.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">      <span class="keyword">if</span> (xhr.readyState === <span class="number">4</span> &amp;&amp; xhr.status === <span class="number">200</span>)</div><div class="line">        handle(xhr)</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 如果使用当前页的 XHR，则会因跨域报错！（该 API 并没有 domain 之说~:joy:）</span></div><div class="line">    xhr.open(<span class="string">'GET'</span>, <span class="string">'http://baz.foo.com/api/get'</span>)</div><div class="line">    xhr.send()</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 接受请求方（iframe 窗口）</span></div><div class="line"><span class="built_in">document</span>.domain = <span class="string">'foo.com'</span> <span class="comment">// 也设置为父域</span></div></pre></td></tr></table></figure>
+<h3 id="JSONP"><a href="#JSONP" class="headerlink" title="JSONP"></a>JSONP</h3><p>JSONP （JSON with Padding），是 Web 开发者用来克服浏览器跨域限制的一种 JSON 扩展。如我们所知，AJAX 虽能下载却无法读取非同源的资源，而对于外联的 <code>&lt;script&gt;</code> 标签，浏览器会正确的下载并执行、求值，只是用户无法读取其中内容。借助 <code>&lt;script&gt;</code> 标签的这一特征，我们可以通过 JSONP 拿到跨域数据。</p>
+<p>举个栗子。假设存在一个 URL 提供 JSON 类型数据（可能动态从数据库查询），在 HTML 中插入一个链接为此的 <code>&lt;script&gt;</code> 标签并无法获得该处的数据，因为浏览器只把其解析为一个对象，并没有赋值或者别的什么东西。而如果使用 JSONP，<code>&lt;script&gt;</code> 标签 <code>src</code> 属性指向的那个 URL 提供的 JSON 数据必须被一段 JavaScript 代码包裹的数据。这段代码就会被浏览器解析并执行，请求方已定义的函数就能间接地获得 JSON 数据了。</p>
+<p>（不过，使用 JSONP 也存在许多安全问题。譬如，在当前页面会注入来自某 URL 的任意内容，这会很危险…）</p>
+<p>简易流程的请求与响应如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 请求 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"application/javascript"</span> <span class="attr">src</span>=<span class="string">"http://example.com/12?=handle"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="comment">&lt;!-- 响应 --&gt;</span></div><div class="line"><span class="comment">&lt;!-- handle(&#123; username: 'shawn', status: 'OK' &#125;) --&gt;</span></div></pre></td></tr></table></figure>
+<p>可以在控制台跑的栗子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">cb</span> (<span class="params">data</span>) </span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(data)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// http://doc.jsfiddle.net/use/echo.html#jsonp</span></div><div class="line"><span class="keyword">var</span> jsonp = <span class="string">'http://jsfiddle.net/echo/jsonp/?callback=cb&amp;data=a'</span></div><div class="line"></div><div class="line"><span class="comment">// Pure AJAX</span></div><div class="line"><span class="keyword">var</span> ajax = <span class="keyword">new</span> XMLHttpRequest()</div><div class="line">ajax.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (ajax.readyState === <span class="number">4</span> &amp;&amp; ajax.status === <span class="number">200</span>)</div><div class="line">    <span class="built_in">console</span>.log(ajax.responseText)</div><div class="line">&#125;</div><div class="line">ajax.open(<span class="string">'GET'</span>, jsonp, <span class="literal">true</span>)</div><div class="line">ajax.send()</div><div class="line"></div><div class="line"><span class="comment">// With JSONP</span></div><div class="line"><span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>)</div><div class="line">script.src = jsonp</div><div class="line"><span class="built_in">document</span>.body.insertBefore(script, <span class="built_in">document</span>.body.lastElementChild)</div></pre></td></tr></table></figure>
+<p>这是在控制台测试的结果：</p>
+<p><img src="/blog/gallery/cross-domain-jsonp.png" alt="JSONP"></p>
+<h3 id="window-postMessage"><a href="#window-postMessage" class="headerlink" title="window.postMessage"></a>window.postMessage</h3><p><code>window.postMessage</code> 是 HTML5 引入的<strong>可控</strong>的<strong>安全</strong>的<strong>可跨域通信</strong>的 API。其语法如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">otherWindow.postMessage(message, targetOrigin)</div></pre></td></tr></table></figure>
+<ul>
+<li>otherWindow：指的是被请求页面的 window 的引用，而不是当前页面</li>
+<li>message：指的是要传输的数据，可以是<a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm" target="_blank" rel="external">任意类型</a></li>
+<li>targetOrigin：指定了被请求页面的源应该满足的格式，可以是 URI（协议、主机、端口三者匹配），或者是 “*”，表示不加限制</li>
+</ul>
+<p>多说不如栗子：</p>
+<p>假设 A 站（<code>http://acfun.com</code>）要向 B 站（<code>http://bilibili.com</code>）发送一个消息，用 postMessage 该如何处理呢？</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// acfun.com</span></div><div class="line"><span class="keyword">var</span> iframe = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>)</div><div class="line">iframe.style.display = <span class="string">'none'</span></div><div class="line">iframe.src = <span class="string">'http://bilibili.com'</span></div><div class="line"><span class="built_in">document</span>.appendChild(iframe)</div><div class="line"></div><div class="line">iframe.onload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">handle</span> (<span class="params">xhr, method</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (method === <span class="string">'GET'</span>)</div><div class="line">      <span class="built_in">console</span>.log(method, xhr.responseText)</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (method === <span class="string">'POST'</span>)</div><div class="line">      <span class="built_in">console</span>.log(method, xhr.responseText)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="built_in">window</span>.addEventListener(<span class="string">'message'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> message = e.data</div><div class="line">    handle(message.xhr, method)</div><div class="line">  &#125;)</div><div class="line"></div><div class="line">  <span class="comment">// GET</span></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">get</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    iframe.contentWindow.postMessage(&#123;</div><div class="line">      method: <span class="string">'GET'</span>,</div><div class="line">      url: <span class="string">'http://bilibili.com/api/1'</span></div><div class="line">    &#125;, <span class="string">'http://bilibili.com'</span>)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// POST</span></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">post</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    iframe.contentWindow.postMessage(&#123;</div><div class="line">      method: <span class="string">'POST'</span>,</div><div class="line">      url: <span class="string">'http://bilibili.com/api'</span>,</div><div class="line">      headers: &#123;</div><div class="line">        <span class="string">'Content-Type'</span>: <span class="string">'application/json;charset=UTF-8'</span></div><div class="line">      &#125;,</div><div class="line">      data: <span class="built_in">JSON</span>.stringify(&#123; <span class="attr">id</span>: <span class="number">1</span> &#125;),</div><div class="line">    &#125;, <span class="string">'http://bilibili.com'</span>)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// bilibili.com</span></div><div class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'message'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</div><div class="line">  <span class="keyword">var</span> message = e.data</div><div class="line"></div><div class="line">  <span class="comment">// 在接受到消息时就根据消息内容发送 XHR 来请求相应的数据并发回原站点</span></div><div class="line">  <span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest()</div><div class="line">  <span class="keyword">if</span> (xhr.headers)</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> header <span class="keyword">in</span> xhr.headers)</div><div class="line">      xhr.setRequestHeader(header)</div><div class="line">      </div><div class="line">  xhr.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (xhr.readyState === <span class="number">4</span> &amp;&amp; xhr.status === <span class="number">200</span>)</div><div class="line">      <span class="comment">// e.source 即为发送消息页的 window</span></div><div class="line">      e.source.postMessage(&#123;</div><div class="line">        method: message.method,</div><div class="line">        xhr: &#123;</div><div class="line">          responseText: xhr.responseText</div><div class="line">        &#125;</div><div class="line">      &#125;, e.origin) <span class="comment">// e.origin 为发送消息页的 url</span></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  xhr.open(message.method, message.url, <span class="literal">true</span>)</div><div class="line">  xhr.send(message.data)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h3 id="CORS"><a href="#CORS" class="headerlink" title="CORS"></a>CORS</h3><p>前面提到的三种跨域手段，除了 postMessage，其它的看起来都有点黑魔法:sparkle:的感觉。如果能直接发请求，而不用整这些乱七八糟的东西就再好不过了。由于需求确实存在，W3C Web 工作组提出了一份新的建议标准，<a href="https://www.w3.org/TR/cors/" target="_blank" rel="external">跨源资源共享（Cross-Origin Resource Share）</a>。该机制能使得安全地进行跨域数据传输成为可能。该机制<strong>需要服务端的配合</strong>才可生效。</p>
+<p>CORS 针对不同的请求有不同的处理方式，分为简单请求与非简单请求。</p>
+<p>简单请求指的是满足以下三点的请求：</p>
+<ul>
+<li>方法为 GET / HEAD / POST</li>
+<li>除用户代理设置的头外，只设置了 Accept / Accept-Language / Content-Language / Content-Type </li>
+<li>Content-Type 是以下三种之一：<ul>
+<li>application/x-www-form-urlencoded</li>
+<li>multipart/form-data</li>
+<li>text/plain</li>
+</ul>
+</li>
+</ul>
+<h4 id="简单请求"><a href="#简单请求" class="headerlink" title="简单请求"></a>简单请求</h4><p>浏览器会根据 URL 自动识别 XMLHttpRequest 是否跨域，如果跨域会自动为请求头添加 <code>Origin</code> 字段。发送出去后，如果响应头中包含 <code>Access-Control-Allow-Origin</code> 字段并且其值包含 <code>Origin</code> 的值，浏览器则不会拦截该响应。</p>
+<p>例如，我们对 <code>http://freegeoip.net/json/</code> 发出一个 XMLHttpRequest 请求，其请求与响应如图：</p>
+<p><img src="/blog/gallery/cors-simple.png" alt="CORS Simple"></p>
+<p>如果对服务器未设置 <code>Access-Control-Allow-Origin</code> 响应头的发送请求，该请求会被视作跨域请求而被浏览器拦截。</p>
+<h4 id="携带-Cookie"><a href="#携带-Cookie" class="headerlink" title="携带 Cookie"></a>携带 Cookie</h4><p>浏览器对 XMLHttpRequest 发起的跨域请求默认是不允许发送 Cookies（与验证信息） 的，在上图中也有体现。但如果将 XMLHttpRequest 的 <code>withCredentials</code> 属性置为 true，浏览器就会允许 Cookies（与验证信息）的发送。</p>
+<p>依然对 <code>http://freegeoip.net/json/</code> 发出一个 XMLHttpRequest 请求，并设置 <code>withCredentials</code> 为 true，其请求与响应如图：</p>
+<p><img src="/blog/gallery/cors-credentials.png" alt="CORS Credentials"></p>
+<p>不过要注意的是，如果服务端能够响应带 Credentials 的请求，则其允许的源必须为请求者，而不能是 “*”。</p>
+<h4 id="预请求"><a href="#预请求" class="headerlink" title="预请求"></a>预请求</h4><p>对于非简单请求（不满足那三点），浏览器必须发送一个 <strong>OPTIONS</strong> 请求（预请求）给目的站点，来验证该跨域请求对目的站点来说是否可接受，以免造成安全事故。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest()</div><div class="line">xhr.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (xhr.readyState === <span class="number">4</span> &amp;&amp; xhr.status === <span class="number">200</span>)</div><div class="line">    <span class="built_in">console</span>.log(xhr.response)</div><div class="line">&#125;</div><div class="line">xhr.open(<span class="string">'PUT'</span>, <span class="string">'http://freegeoip.net/json/'</span>, <span class="literal">true</span>) <span class="comment">// 非 GET/POST/HEAD</span></div><div class="line">xhr.setRequestHeader(<span class="string">'Content-Type'</span>, <span class="string">'application/json'</span>)</div><div class="line">xhr.setRequestHeader(<span class="string">'X-RANDOM'</span>, <span class="string">'123'</span>)</div><div class="line">xhr.send()</div></pre></td></tr></table></figure>
+<p>其请求与响应如图：</p>
+<p><img src="/blog/gallery/cors-preflight.png" alt="CORS Preflight"></p>
+<p>发现该服务并不支持非简单请求。</p>
+<p>下面是支持非简单请求应有的响应：</p>
+<p><img src="/blog/gallery/cors-preflight-1.png" alt="CORS Option"><br><img src="/blog/gallery/cors-preflight-2.png" alt="CORS Request"></p>
+<p>koa 提供了一个简单的实现方案，<a href="https://github.com/koajs/cors/blob/master/index.js" target="_blank" rel="external">koa-cors</a>。</p>
+<h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><h3 id="document-domain-iframe-1"><a href="#document-domain-iframe-1" class="headerlink" title="document.domain + iframe"></a>document.domain + iframe</h3><ul>
+<li>支持较老浏览器</li>
+<li>支持不止于 GET</li>
+<li>只需父、子域之间通信</li>
+</ul>
+<h3 id="JSONP-1"><a href="#JSONP-1" class="headerlink" title="JSONP"></a>JSONP</h3><ul>
+<li>支持较老浏览器</li>
+<li>只支持 GET</li>
+<li>支持跨完全不同的域</li>
+</ul>
+<h3 id="window-postMessage-1"><a href="#window-postMessage-1" class="headerlink" title="window.postMessage"></a>window.postMessage</h3><ul>
+<li>支持 <a href="http://caniuse.com/#search=postMessage" target="_blank" rel="external">IE8+</a>，IE8/9 只支持在 iframes/frames 间传递消息，不支持弹出窗口；且 message 只能为字符串。:pill:</li>
+<li>支持不止于 GET</li>
+<li>支持跨完全不同的域</li>
+</ul>
+<h3 id="CORS-推荐"><a href="#CORS-推荐" class="headerlink" title="CORS (推荐)"></a>CORS (推荐)</h3><ul>
+<li>支持 <a href="http://caniuse.com/#search=CORS" target="_blank" rel="external">IE8+</a></li>
+<li>支持不止于 GET</li>
+<li>支持自定义 HTTP 头</li>
+<li>支持发送 Cookies</li>
+<li>支持跨完全不同的域</li>
+</ul>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ol>
+<li><a href="https://tools.ietf.org/html/rfc6454" target="_blank" rel="external">RFC 6454 - The Web Origin Concept</a></li>
+<li><a href="https://www.w3.org/Security/wiki/Same_Origin_Policy" target="_blank" rel="external">W3C - Same-Origin Policy</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy" target="_blank" rel="external">MDN - Same-Origin Policy</a></li>
+<li><a href="http://stackoverflow.com/questions/9222822/why-do-browser-apis-restrict-cross-domain-requests" target="_blank" rel="external">StackOverflow - Why do browser APIs restrict cross-domain requests?</a></li>
+<li><a href="http://stackoverflow.com/questions/3076414/ways-to-circumvent-the-same-origin-policy" target="_blank" rel="external">StackOverflow - Ways to circumvent the same-origin policy</a></li>
+<li><a href="https://en.wikipedia.org/wiki/JSONP" target="_blank" rel="external">Wikipedia - JSONP</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage" target="_blank" rel="external">MDN - postMessage</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS" target="_blank" rel="external">MDN - HTTP Access Control</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2016/04/cors.html" target="_blank" rel="external">跨域资源共享 CORS 详解</a></li>
+<li><a href="https://github.com/joyeecheung/cross-domain-with-koa" target="_blank" rel="external">cross-domain-with-koa</a></li>
+</ol>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://shawndai.cn/blog/posts/whats-cors-and-how-to-make-cors/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="http://shawndai.cn/blog/posts/whats-cors-and-how-to-make-cors/">Comments</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/posts/how-to-program-object-oriented-with-javascript/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    JavaScript 如何面向对象编程？
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/posts/whats-the-differences-between-amd-cmd-commonjs/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">What&#39;s the differences between AMD, CMD, CommonJS?</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">recent</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/posts/read-weekly-issue-1/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/读技术周刊/">读技术周刊</a></p>
+                            <p class="item-title"><a href="/blog/posts/read-weekly-issue-1/" class="title">读技术周刊（一）</a></p>
+                            <p class="item-date"><time datetime="2017-08-11T05:01:40.000Z" itemprop="datePublished">2017-08-11</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/posts/how-to-detect-whether-a-singly-linked-list-contains-loop-or-not/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/posts/how-to-detect-whether-a-singly-linked-list-contains-loop-or-not/" class="title">如何判断一个单向链表是否有环？</a></p>
+                            <p class="item-date"><time datetime="2016-10-15T16:00:00.000Z" itemprop="datePublished">2016-10-16</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/posts/how-to-program-object-oriented-with-javascript/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/posts/how-to-program-object-oriented-with-javascript/" class="title">JavaScript 如何面向对象编程？</a></p>
+                            <p class="item-date"><time datetime="2016-08-25T16:00:00.000Z" itemprop="datePublished">2016-08-26</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/posts/whats-cors-and-how-to-make-cors/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/posts/whats-cors-and-how-to-make-cors/" class="title">何为跨域？如何跨域？</a></p>
+                            <p class="item-date"><time datetime="2016-07-31T16:00:00.000Z" itemprop="datePublished">2016-08-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/posts/whats-the-differences-between-amd-cmd-commonjs/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/posts/whats-the-differences-between-amd-cmd-commonjs/" class="title">What&#39;s the differences between AMD, CMD, CommonJS?</a></p>
+                            <p class="item-date"><time datetime="2016-07-24T16:00:00.000Z" itemprop="datePublished">2016-07-25</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/自问/">自问</a><span class="category-list-count">14</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/读技术周刊/">读技术周刊</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/blog/tags/ES6/" style="font-size: 13.33px;">ES6</a> <a href="/blog/tags/browser/" style="font-size: 10px;">browser</a> <a href="/blog/tags/cache/" style="font-size: 10px;">cache</a> <a href="/blog/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/blog/tags/css/" style="font-size: 10px;">css</a> <a href="/blog/tags/develop-tools/" style="font-size: 10px;">develop tools</a> <a href="/blog/tags/html/" style="font-size: 10px;">html</a> <a href="/blog/tags/http/" style="font-size: 16.67px;">http</a> <a href="/blog/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/blog/tags/jsonp/" style="font-size: 10px;">jsonp</a> <a href="/blog/tags/linux/" style="font-size: 10px;">linux</a> <a href="/blog/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/blog/tags/web/" style="font-size: 10px;">web</a> <a href="/blog/tags/web-font/" style="font-size: 10px;">web font</a> <a href="/blog/tags/性能优化/" style="font-size: 13.33px;">性能优化</a> <a href="/blog/tags/排版/" style="font-size: 10px;">排版</a> <a href="/blog/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/blog/tags/模块/" style="font-size: 10px;">模块</a> <a href="/blog/tags/算法/" style="font-size: 13.33px;">算法</a> <a href="/blog/tags/编译原理/" style="font-size: 10px;">编译原理</a> <a href="/blog/tags/跨域/" style="font-size: 10px;">跨域</a> <a href="/blog/tags/递归/" style="font-size: 10px;">递归</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">links</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://dengal3.github.io/">ailin</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 Shawn Dai<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script>
+    var disqus_config = function () {
+        
+            this.page.url = 'http://shawndai.cn/blog/posts/whats-cors-and-how-to-make-cors/';
+        
+        this.page.identifier = '2016-08-01';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'blog-01noafglys' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>

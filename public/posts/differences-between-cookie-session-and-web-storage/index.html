@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Differences between cookie, session and Web Storage? | Shawn&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="CookieHTTP is a stateless protocol, but there are many situations where we need to get stateful infomation…Cookies were designed for this to be a reliable mechanism for websibites to remember stateful">
+<meta name="keywords" content="http,cookie">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Differences between cookie, session and Web Storage?">
+<meta property="og:url" content="http://shawndai.cn/blog/posts/differences-between-cookie-session-and-web-storage/index.html">
+<meta property="og:site_name" content="Shawn&#39;s Blog">
+<meta property="og:description" content="CookieHTTP is a stateless protocol, but there are many situations where we need to get stateful infomation…Cookies were designed for this to be a reliable mechanism for websibites to remember stateful">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/0/0b/Third_party_cookie.png">
+<meta property="og:updated_time" content="2017-09-14T03:48:33.486Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Differences between cookie, session and Web Storage?">
+<meta name="twitter:description" content="CookieHTTP is a stateless protocol, but there are many situations where we need to get stateful infomation…Cookies were designed for this to be a reliable mechanism for websibites to remember stateful">
+<meta name="twitter:image" content="https://upload.wikimedia.org/wikipedia/commons/0/0b/Third_party_cookie.png">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Shawn&#39;s Blog" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="/blog/css/images/logo.png" />
+    
+
+    <link rel="stylesheet" href="/blog/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/blog/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/blog/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/blog/css/style.css">
+
+    <script src="/blog/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/blog/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/blog/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-63581862-5', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/blog/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Shawn&#39;s Blog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/blog/.">Home</a>
+                
+                    <a class="main-nav-link" href="/blog/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/blog/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/blog/tags">Tags</a>
+                
+                    <a class="main-nav-link" href="/blog/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/blog/css/images/avatar.jpg" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/blog/',
+        CONTENT_URL: '/blog/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/blog/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/blog/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/blog/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/blog/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/blog/tags">Tags</a></td>
+                
+                    <td><a class="main-nav-link" href="/blog/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/blog/css/images/avatar.jpg" />
+            <h2 id="name">Shawn Dai</h2>
+            <h3 id="title">Web Developer, work in Tencent Cloud now.</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shenzhen, China</span>
+            <a id="follow" target="_blank" href="https://github.com/daix6/">FOLLOW</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                15
+                <span>posts</span>
+            </div>
+            <div class="article-info-block">
+                22
+                <span>tags</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/daix6" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://weibo.com/1996DX" target="_blank" title="weibo" class=tooltip>
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://twitter.com/shawndai06" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://instagram.com/shawndai06" target="_blank" title="instagram" class=tooltip>
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="http://steamcommunity.com/profiles/76561198260578251/" target="_blank" title="steam" class=tooltip>
+                            <i class="fa fa-steam"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/blog/atom.xml" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-2016-07-13" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Differences between cookie, session and Web Storage?
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/blog/posts/differences-between-cookie-session-and-web-storage/">
+            <time datetime="2016-07-12T16:00:00.000Z" itemprop="datePublished">2016-07-13</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/blog/categories/自问/">自问</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/blog/tags/cookie/">cookie</a>, <a class="tag-link" href="/blog/tags/http/">http</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h2><p>HTTP is a stateless protocol, but there are many situations where we need to get stateful infomation…Cookies were designed for this to be <em>a reliable mechanism for websibites to remember stateful information</em>.</p>
+<p>A cookie is a small piece of data <strong>sent from a website and stored in the user’s web browser</strong> while the user is browsing.</p>
+<a id="more"></a>
+<h3 id="Expires-amp-Max-Age"><a href="#Expires-amp-Max-Age" class="headerlink" title="Expires &amp; Max-Age"></a>Expires &amp; Max-Age</h3><ul>
+<li><code>Expires</code> defines a specific date and time when the user agent should delete the cookie, with the format <code>Wdy, DD Mon YYYY HH:MM:SS GMT</code>.</li>
+<li>If <code>Expires</code> defines a date in the past, the user agent will <em>delete it right away</em>.</li>
+<li><code>Max-Age</code> defines the cookie’s expiration as an interval of seconds in the future relative to the time the browser received the cookie.</li>
+<li>Cookies without <code>Expires</code> and <code>Max-Age</code> will be set as <strong>session cookies</strong>, it will be <em>deleted after the user closes their user agents (browser)</em>.</li>
+</ul>
+<h3 id="Domain-amp-Path"><a href="#Domain-amp-Path" class="headerlink" title="Domain &amp; Path"></a>Domain &amp; Path</h3><ul>
+<li><code>Domain</code> and <code>Path</code> define the scope of the cookie. If not specified by the server, they default to the domain (not including sub domains) and path of the requested resource.</li>
+<li><code>Domain</code> can <strong>only</strong> be set on <em>the current resource’s top domain and its sub domains</em>.</li>
+</ul>
+<h3 id="Secure-amp-HttpOnly"><a href="#Secure-amp-HttpOnly" class="headerlink" title="Secure &amp; HttpOnly"></a>Secure &amp; HttpOnly</h3><ul>
+<li><code>Secure</code> and <code>HttpOnly</code> are flags indicating the behaviors the cookie should be enabled.</li>
+<li><code>Secure</code> defines whether the cookie communication should be <em>limited to encryted transmission</em> (HTTPS), directing user agents to use cookies <strong>only via secure/encrypted connections</strong>.</li>
+<li><code>HttpOnly</code> directs the user agent <em>not to expose cookies through channels other than HTTP(S) requests</em>. If enabled, the cookie <strong>cannot be accessed via client-side scripting languages (JavaScript)</strong>, which can avoid XSS partly.</li>
+</ul>
+<h3 id="Limit"><a href="#Limit" class="headerlink" title="Limit"></a>Limit</h3><p>The user agents should provide:</p>
+<ul>
+<li><strong>at least</strong> 4096 bytes per cookie</li>
+<li>at least 50 cookies per domain</li>
+<li>at least 3000 cookies total</li>
+</ul>
+<h3 id="How"><a href="#How" class="headerlink" title="How"></a>How</h3><p>Add fields in HTTP header.</p>
+<ol>
+<li><p>Server :arrow_right: User Agent</p>
+ <figure class="highlight bnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Set-Cookie: key=value[; Expires=date][; Max-Age=seconds][; Domain=domain][; Path=path][; Secure][; HttpOnly]</div></pre></td></tr></table></figure>
+</li>
+<li><p>User Agent :arrow_right: Server</p>
+ <figure class="highlight bnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Cookie: key=value</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="Third-Party-Cookie"><a href="#Third-Party-Cookie" class="headerlink" title="Third-Party Cookie"></a>Third-Party Cookie</h3><p>A web page may contain images or other components stored on servers in other domains (advertisements or something). Cookies that are set during retrieval of these components are called <strong>third-party cookies</strong>. These cookies can be used to track a user across multiple sites by advertsing companies (where they placed the advertising components).</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Third_party_cookie.png" alt="Example"></p>
+<h3 id="Cookies-Theft-amp-amp-Session-Hijacking"><a href="#Cookies-Theft-amp-amp-Session-Hijacking" class="headerlink" title="Cookies Theft &amp;&amp; Session Hijacking"></a>Cookies Theft &amp;&amp; Session Hijacking</h3><ul>
+<li>Network Eavesdropping (Man-in-the-Middle Attack)</li>
+<li>DNS Cache Poisoning (publishing false sub-domain)</li>
+<li>XSS (Cross-Site Scripting)</li>
+<li>CSRF (Cross-Site Request Forgery)</li>
+</ul>
+<p>Details in the future. :joy:</p>
+<h2 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h2><p>Sessions are <strong>server-side</strong> files / data that contain user information. Sessions have a unique ID that maps them to specific users. This ID can be passed in the URL or saved into a session cookie.</p>
+<h3 id="Session-ID"><a href="#Session-ID" class="headerlink" title="Session ID"></a>Session ID</h3><blockquote>
+<p>A session token is a unique identifier that is generated and sent from a server to a client to identify the current interaction session. The client usually stores and sends the token as an <strong>HTTP cookie</strong> and/or sends it as <strong>a parameter in GET or POST queries</strong>.</p>
+<p>The reason to use session tokens is that the client only has to handle the identifier—<strong>all session data is stored on the server</strong> (usually in a database, to which the client does not have direct access) linked to that identifier.</p>
+</blockquote>
+<h2 id="Web-Storage"><a href="#Web-Storage" class="headerlink" title="Web Storage"></a>Web Storage</h2><p>The <strong>Web Storage API</strong> provides mechanisms by which <strong>browsers</strong> can store key/value pairs, in a much more intuitive fashion than using cookies.</p>
+<ul>
+<li><code>sessionStorage</code> maintains a separate storage area for each given origin that’s <strong>available for the duration of the page session</strong> (as long as the browser is open, including page reloads and restores)</li>
+<li><code>localStorage</code> does the same thing, but <strong>persists even when the browser is closed and reopened</strong>.</li>
+</ul>
+<h3 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'storage'</span>, (e) =&gt; <span class="built_in">console</span>.log(e))</div><div class="line"></div><div class="line">localStorage.setItem(<span class="string">'local'</span>, <span class="number">1</span>)</div><div class="line">localStorage.getItem(<span class="string">'local'</span>) <span class="comment">// 1</span></div><div class="line">localStorage.removeItem(<span class="string">'local'</span>)</div><div class="line">localStorage.getItem(<span class="string">'local'</span>) <span class="comment">// null</span></div><div class="line">localStorage.clear() <span class="comment">// remove all items</span></div></pre></td></tr></table></figure>
+<h2 id="Differences"><a href="#Differences" class="headerlink" title="Differences"></a>Differences</h2><table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">Cookie</th>
+<th style="text-align:center">Session</th>
+<th style="text-align:center">localStorage</th>
+<th style="text-align:center">sessionStorage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Where</td>
+<td style="text-align:center">Client</td>
+<td style="text-align:center">Server</td>
+<td style="text-align:center">Client</td>
+<td style="text-align:center">Client</td>
+</tr>
+<tr>
+<td style="text-align:center">How</td>
+<td style="text-align:center">HTTP Header / JS</td>
+<td style="text-align:center">Session ID</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">-</td>
+</tr>
+<tr>
+<td style="text-align:center">API</td>
+<td style="text-align:center">document.cookie</td>
+<td style="text-align:center">Depend on server</td>
+<td style="text-align:center">Web Storage API</td>
+<td style="text-align:center">Web Storage API</td>
+</tr>
+<tr>
+<td style="text-align:center">Size</td>
+<td style="text-align:center">&gt;= 4KB</td>
+<td style="text-align:center">no limit (Server)</td>
+<td style="text-align:center">Vary between</td>
+<td style="text-align:center">browsers</td>
+</tr>
+<tr>
+<td style="text-align:center">Expire</td>
+<td style="text-align:center">expires &amp; max-age</td>
+<td style="text-align:center">Page duration</td>
+<td style="text-align:center">Forever (removeItem / clear)</td>
+<td style="text-align:center">Page duration</td>
+</tr>
+</tbody>
+</table>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ol>
+<li><a href="https://stackoverflow.com/questions/359434/differences-between-cookies-and-sessions" target="_blank" rel="external">Differences between cookies and sessions?</a></li>
+<li><a href="https://stackoverflow.com/questions/19867599/what-is-the-difference-between-localstorage-sessionstorage-session-and-cookies" target="_blank" rel="external">What is the difference between localStorage, sessionStorage, session and cookies?</a></li>
+<li><a href="https://en.wikipedia.org/wiki/HTTP_cookie" target="_blank" rel="external">HTTP cookie - Wikipedia</a> :bangbang:</li>
+<li><a href="https://tools.ietf.org/html/rfc6265" target="_blank" rel="external">HTTP State Management Mechanism - Wikipedia</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Session_&lpar;computer_science&rpar;#HTTP_session_token" target="_blank" rel="external">Session (computer science) - Wikipedia</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Session_ID" target="_blank" rel="external">Session ID - Wikipedia</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Web_storage#Storage_size" target="_blank" rel="external">Web_storage - Wikipedia</a></li>
+<li><a href="http://dev-test.nemikor.com/web-storage/support-test/" target="_blank" rel="external">Web Storage Support Test</a></li>
+</ol>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://shawndai.cn/blog/posts/differences-between-cookie-session-and-web-storage/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="http://shawndai.cn/blog/posts/differences-between-cookie-session-and-web-storage/">Comments</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/blog/posts/what-are-multipart-form-data-and-application-x-www-form-urlencoded/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    What are multipart/form-data and application/x-www-form-urlencoded?
+                
+            </div>
+        </a>
+    
+    
+        <a href="/blog/posts/whats-the-difference-between-async-and-defer/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">What&#39;s the difference between async and defer?</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">recent</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/posts/read-weekly-issue-1/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/读技术周刊/">读技术周刊</a></p>
+                            <p class="item-title"><a href="/blog/posts/read-weekly-issue-1/" class="title">读技术周刊（一）</a></p>
+                            <p class="item-date"><time datetime="2017-08-11T05:01:40.000Z" itemprop="datePublished">2017-08-11</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/posts/how-to-detect-whether-a-singly-linked-list-contains-loop-or-not/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/posts/how-to-detect-whether-a-singly-linked-list-contains-loop-or-not/" class="title">如何判断一个单向链表是否有环？</a></p>
+                            <p class="item-date"><time datetime="2016-10-15T16:00:00.000Z" itemprop="datePublished">2016-10-16</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/posts/how-to-program-object-oriented-with-javascript/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/posts/how-to-program-object-oriented-with-javascript/" class="title">JavaScript 如何面向对象编程？</a></p>
+                            <p class="item-date"><time datetime="2016-08-25T16:00:00.000Z" itemprop="datePublished">2016-08-26</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/posts/whats-cors-and-how-to-make-cors/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/posts/whats-cors-and-how-to-make-cors/" class="title">何为跨域？如何跨域？</a></p>
+                            <p class="item-date"><time datetime="2016-07-31T16:00:00.000Z" itemprop="datePublished">2016-08-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/blog/posts/whats-the-differences-between-amd-cmd-commonjs/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/blog/categories/自问/">自问</a></p>
+                            <p class="item-title"><a href="/blog/posts/whats-the-differences-between-amd-cmd-commonjs/" class="title">What&#39;s the differences between AMD, CMD, CommonJS?</a></p>
+                            <p class="item-date"><time datetime="2016-07-24T16:00:00.000Z" itemprop="datePublished">2016-07-25</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/自问/">自问</a><span class="category-list-count">14</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/读技术周刊/">读技术周刊</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/blog/tags/ES6/" style="font-size: 13.33px;">ES6</a> <a href="/blog/tags/browser/" style="font-size: 10px;">browser</a> <a href="/blog/tags/cache/" style="font-size: 10px;">cache</a> <a href="/blog/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/blog/tags/css/" style="font-size: 10px;">css</a> <a href="/blog/tags/develop-tools/" style="font-size: 10px;">develop tools</a> <a href="/blog/tags/html/" style="font-size: 10px;">html</a> <a href="/blog/tags/http/" style="font-size: 16.67px;">http</a> <a href="/blog/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/blog/tags/jsonp/" style="font-size: 10px;">jsonp</a> <a href="/blog/tags/linux/" style="font-size: 10px;">linux</a> <a href="/blog/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/blog/tags/web/" style="font-size: 10px;">web</a> <a href="/blog/tags/web-font/" style="font-size: 10px;">web font</a> <a href="/blog/tags/性能优化/" style="font-size: 13.33px;">性能优化</a> <a href="/blog/tags/排版/" style="font-size: 10px;">排版</a> <a href="/blog/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/blog/tags/模块/" style="font-size: 10px;">模块</a> <a href="/blog/tags/算法/" style="font-size: 13.33px;">算法</a> <a href="/blog/tags/编译原理/" style="font-size: 10px;">编译原理</a> <a href="/blog/tags/跨域/" style="font-size: 10px;">跨域</a> <a href="/blog/tags/递归/" style="font-size: 10px;">递归</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">links</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://dengal3.github.io/">ailin</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 Shawn Dai<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script>
+    var disqus_config = function () {
+        
+            this.page.url = 'http://shawndai.cn/blog/posts/differences-between-cookie-session-and-web-storage/';
+        
+        this.page.identifier = '2016-07-13';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'blog-01noafglys' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+
+    
+        <script src="/blog/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/blog/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/blog/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/blog/js/main.js"></script>
+
+    </div>
+</body>
+</html>
